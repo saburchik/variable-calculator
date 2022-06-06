@@ -5,7 +5,7 @@ class Fields {
   }
   getInput() {
     const input = document.querySelector('input')
-    return input.value
+    return input
   }
   getButton() {
     this.getForm().onclick = (e) => e.preventDefault() // Stop reload
@@ -17,14 +17,14 @@ class Fields {
     return textarea1
   }
   getTextarea2() {
-    const textarea2 = document.querySelector('#textarea1')
+    const textarea2 = document.querySelector('#textarea2')
     return textarea2
   }
 
   throwError(num) {
     const arrayErrors = [
+      'Error! Perhaps you have an empty field.',
       'Syntax Error! Available commands: var, let, fn, print, printvars, printfns.',
-      'Error! Available you have an empty string',
     ]
     return (document.querySelector('h1').innerHTML = arrayErrors[num])
   }

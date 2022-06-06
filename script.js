@@ -1,26 +1,27 @@
 import Fields from './Fields.js'
-
-class LogicApp extends Fields {
-  logic() {
-    const inputValue = this.getInput().match(
-      /\bvar|let|fn|print|printvars|printfns\b/
-    )
-
-    if (inputValue) {
-      this.getTextarea1().innerHTML += this.getInput() + '\n'
-      document.querySelector('h1').innerHTML = ' '
-      console.log(inputValue)
-    } else {
-      this.getTextarea1().innerHTML += this.getInput() + '\n'
-      this.getTextarea2().innerHTML += 'NaN' + '\n'
-      throw Error(this.throwError(0))
-    }
-  }
-}
+import Commands from './Commands.js'
+import Errors from './Errors.js'
 
 const setFields = new Fields()
-const startLogic = new LogicApp()
+const commands = new Commands()
+const error = new Errors()
 
-setFields.getButton().onclick = (e) => {
-  startLogic.logic()
+setFields.getButton().onclick = () => {
+  let checkCommands = /\bvar|let|fn|print|printvars|printfns\b/
+  let checkVar = /var\s(?<varKey>[a-zA-Z0-9]+)/m
+  let checkLet = /let\s(?<letKey>[a-zA-Z0-9]+)=(?<letValue>\d+.\d+|\d+)/
+  let checkFn = /fn\s([a-zA-Z0-9]+)\s([a-zA-Z0-9]+)([\+\-\*\/])([a-zA-Z0-9]+)/
+
+  error.checkingForEmptyString()
+  error.checkingForVariable(checkCommands)
+
+  if (setFields.getInput().value.match(checkVar)) {
+    commands.getVar()
+  }
+  if (setFields.getInput().value.match(checkLet)) {
+    commands.getLet()
+  }
+  if (setFields.getInput().value.match(checkFn)) {
+    commands.getFn(setFields.getInput().value.match(checkFn))
+  }
 }
