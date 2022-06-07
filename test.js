@@ -17,7 +17,11 @@ let parseNum = Number(value2[0])
 // console.log(parseNum)
 // console.log(value2)
 
-let regexpFn = 'fn xPlusY 3*3'.match(
-  new RegExp(`fn\\s(?<fnName>[a-zA-Z0-9]+)\\s(\\d)([*/|+-])(\\d)`)
-)
-console.log(regexpFn)
+// let regexpFn = 'fn xPlusY 3*3'.match(
+//   new RegExp(`fn\\s(?<fnName>[a-zA-Z0-9]+)\\s(\\d)([*/|+-])(\\d)`)
+// )
+// console.log(regexpFn)
+
+let text = 'nameFunc'
+let gig = 'print nameFunc'.match(new RegExp(`print ${text}`))
+console.log(gig)

@@ -8,11 +8,7 @@ class Errors extends Fields {
   }
 
   checkingForVariable(checkCommands) {
-    if (this.getInput().value.match(checkCommands)) {
-      this.getTextarea1().innerHTML += this.getInput().value + '\n'
-      document.querySelector('h1').innerHTML = ''
-      //console.log(inputValue)
-    } else {
+    if (!this.getInput().value.match(checkCommands)) {
       this.getTextarea2().innerHTML = 'Syntax error!' + '\n'
       throw Error(this.throwError(1))
     }

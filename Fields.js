@@ -25,6 +25,7 @@ class Fields {
     const arrayErrors = [
       'Error! Perhaps you have an empty field.',
       'Syntax Error! Available commands: var, let, fn, print, printvars, printfns.',
+      'The variable has already been assigned',
     ]
     return (document.querySelector('h1').innerHTML = arrayErrors[num])
   }
