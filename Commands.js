@@ -9,16 +9,7 @@ class Commands extends Fields {
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     }
-    this.variables = {}
-  }
-
-  saveNameLet() {
-    return this.getTextarea1().value.match(
-      /let\s(?<letKey>[a-zA-Z0-9]+)=(?<letValue>\d+.\d+|\d+)/
-    )
-  }
-  saveNameVar() {
-    return this.getTextarea1().value.match(/var\s(?<varKey>[a-zA-Z0-9]+)/m)
+    this.variables = { x: 11, y: 14 }
   }
 
   applyOperator(op, a, b) {
@@ -27,81 +18,97 @@ class Commands extends Fields {
   }
 
   addInput(current) {
-    this.getTextarea1().innerHTML += current.input + '\n'
-    document.querySelector('h1').innerHTML = ''
+    super.getTextarea1().innerHTML += current.input + '\n'
+    document.querySelector('h2').innerHTML = ''
   }
 
-  getVarAndLet() {
-    let current = this.getInput().value.match(
-      /(let|var)\s(?<varName>[a-zA-Z0-9]+)?=?(?<varValue>\d+.\d+|\d+)?/
-    )
-    let fidex = Number(current.groups.varValue).toFixed(3).replace(/.$/, '')
+  fixNum(num, dec = 2) {
+    const calcDec = Math.pow(10, dec)
+    return Math.trunc(num * calcDec) / calcDec
+  }
 
-    if (Object.keys(this.variables).length == 0) {
-      if (fidex === 'NaN') {
-        this.variables[current.groups.varName] = NaN
+  startVar(inputVar) {
+    if (inputVar) {
+      let variableName = inputVar.groups.varName
+      if (Object.keys(this.variables).length === 0) {
+        this.variables[variableName] = NaN
       } else {
-        this.variables[current.groups.varName] = fidex
-      }
-    } else {
-      for (let key in this.variables) {
-        if (key === current.groups.varName) {
-          if (fidex !== 'NaN') {
-            this.variables[key] = fidex
-          } else {
+        for (let key in this.variables) {
+          if (key === variableName) {
             throw Error(this.throwError(2))
-          }
-        } else {
-          if (fidex === 'NaN') {
-            this.variables[current.groups.varName] = NaN
           } else {
-            this.variables[current.groups.varName] = fidex
+            this.variables[variableName] = NaN
           }
         }
       }
+      this.addInput(inputVar)
     }
-
-    this.addInput(current)
-    this.getInput().value = ''
+    super.getInput().value = ''
     console.log(this.variables)
   }
-  getFn(newValue) {
-    if (this.getInput().value.match(/fn/)) {
-      if (this.saveNameVar() === null && this.saveNameLet() === null) {
-        if (newValue[2] === newValue[4]) {
-          throw Error(`The ${newValue[2]} is not defined`)
-        } else {
-          throw Error(`${newValue[2]} and ${newValue[4]} is not defined`)
+  startLet(inputLet) {
+    if (inputLet) {
+      let variableName = inputLet.groups.letName
+      let variableValue = inputLet.groups.letValue
+      let fixingValue = this.fixNum(Number(variableValue))
+
+      if (Object.keys(this.variables).length === 0) {
+        this.variables[variableName] = fixingValue
+      } else {
+        this.variables[variableName] = fixingValue
+        for (let key in this.variables) {
+          if (key === variableValue) {
+            this.variables[variableName] = this.variables[variableValue]
+          }
+        }
+      }
+      this.addInput(inputLet)
+    }
+    super.getInput().value = ''
+    console.log(this.variables)
+  }
+
+  printFunction(newValue) {
+    let arithmeticOp = newValue.match(
+      /^(?<valueOne>[a-zA-Z_$][a-zA-Z\d_$]*)(?<arithSign>[*/+-])(?<valueTwo>[a-zA-Z_$][a-zA-Z\d_$]*)$/
+    )
+    let sign = arithmeticOp.groups.arithSign
+    if (arithmeticOp) {
+      for (let key in this.variables) {
+        if (key === arithmeticOp.groups.valueOne) {
+          let saveValue1 = this.variables[key]
+          for (let key in this.variables) {
+            if (key === arithmeticOp.groups.valueTwo) {
+              let saveValue2 = this.variables[key]
+              let res = this.applyOperator(sign, saveValue1, saveValue2)
+              super.getTextarea2().innerHTML += this.fixNum(res) + '\n'
+            }
+          }
         }
       }
     }
+    super.getInput().value = ''
   }
-  getPrint(newValue) {
-    debugger
-    if (this.saveNameVar().groups.varKey === this.saveNameLet().groups.letKey) {
-      debugger
-      let regexpFn = this.getTextarea1().value.match(
-        new RegExp(
-          `fn\\s(?<fnName>[a-zA-Z0-9]+)\\s${
-            this.saveNameLet().groups.letKey
-          }[*/|+-]${this.saveNameLet().groups.letKey}`
-        )
-      )
-      if (regexpFn) {
-        debugger
-        let arithmeticSign = newValue[3]
-        let calc = this.applyOperator(
-          arithmeticSign,
-          Number(this.saveNameLet().groups.letValue),
-          Number(this.saveNameLet().groups.letValue)
-        )
-        this.getTextarea2().innerHTML = calc + '\n'
-        console.log(regexpFn)
-        console.log(calc)
+
+  getPrint(inputPrint) {
+    let variableName = inputPrint.groups.keyName
+    if (inputPrint) {
+      for (let key in this.variables) {
+        if (key === variableName) {
+          if (this.variables[key] !== NaN || Number) {
+            this.printFunction(this.variables[key])
+          } else {
+            super.getTextarea2().innerHTML += this.variables[key] + '\n'
+          }
+        } else {
+          super.getTextarea2().innerHTML += NaN + '\n'
+        }
+        // if (key !== variableName) {
+        //   super.getTextarea2().innerHTML += NaN + '\n'
+        // }
       }
-    } else {
-      throw Error('Переменные не былт обьявлены')
     }
+    this.addInput(inputPrint)
   }
   getPrintvars() {
     const ordered = Object.keys(this.variables)
@@ -111,11 +118,35 @@ class Commands extends Fields {
         return obj
       }, {})
 
-    this.getTextarea2().innerHTML = ''
+    super.getTextarea2().innerHTML = ''
     for (let key in ordered) {
-      this.getTextarea2().innerHTML += key + ' : ' + ordered[key] + '\n'
+      super.getTextarea2().innerHTML += key + ': ' + ordered[key] + '\n'
     }
     console.log(ordered)
+  }
+
+  getFn(inputFn) {
+    if (inputFn) {
+      let funcName = inputFn.groups.fnName
+      let value1 = inputFn.groups.valueOne
+      let value2 = inputFn.groups.valueTwo
+      let sign = inputFn.groups.arithSign
+
+      if (Object.keys(this.variables).length === 0) {
+        this.variables[funcName] = sign
+      } else {
+        for (let key in this.variables) {
+          if (key === funcName) {
+            throw Error(this.throwError(2))
+          } else {
+            this.variables[funcName] = `${value1}${sign}${value2}`
+          }
+        }
+      }
+      this.addInput(inputFn)
+    }
+    super.getInput().value = ''
+    console.log(this.variables)
   }
 }
 

@@ -22,6 +22,11 @@ let parseNum = Number(value2[0])
 // )
 // console.log(regexpFn)
 
-let text = 'nameFunc'
-let gig = 'print nameFunc'.match(new RegExp(`print ${text}`))
-console.log(gig)
+// == Valid checking for var:
+let cvar = 'var '.match(/^(var)\s+(?<varName>[a-zA-Z_$][a-zA-Z\d_$]*)$/)
+
+// == Valid checking for let:
+let clet = 'let _X=32323.223233'.match(
+  /^(let)\s+(?<varName>[a-zA-Z_$][a-zA-Z\d_$]*)=(?<varValue>\d+.\d+|\d+)$/
+)
+console.log(clet)

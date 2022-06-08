@@ -27,7 +27,7 @@ class Fields {
       'Syntax Error! Available commands: var, let, fn, print, printvars, printfns.',
       'The variable has already been assigned',
     ]
-    return (document.querySelector('h1').innerHTML = arrayErrors[num])
+    return (document.querySelector('h2').innerHTML = arrayErrors[num])
   }
 }
 

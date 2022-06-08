@@ -8,24 +8,36 @@ const error = new Errors()
 
 setFields.getButton().onclick = () => {
   let checkCommands = /\bvar|let|fn|print|printvars|printfns\b/
-  let checkPrint = /\bprintvars\b/
-  let checkLet =
-    /(let|var)\s(?<letKey>[a-zA-Z0-9]+)?=?(?<letValue>\d+.\d+|\d+)?/
-  let checkFn =
-    /fn\s(?<nameKey>[a-zA-Z0-9]+)\s([a-zA-Z0-9]+)([*/+-])([a-zA-Z0-9]+)/
+  const inputFn =
+    /^(fn)\s+(?<fnName>[a-zA-Z_$][a-zA-Z\d_$]*)=(?<valueOne>[a-zA-Z_$][a-zA-Z\d_$]*)(?<arithSign>[*/+-])?(?<valueTwo>[a-zA-Z_$][a-zA-Z\d_$]*)?$/
+  const inputVar = /^(var)\s+(?<varName>[a-zA-Z_$][a-zA-Z\d_$]*)$/
+  const inputLet =
+    /^(let)\s+(?<letName>[a-zA-Z_$][a-zA-Z\d_$]*)=(?<letValue>\d+.\d+|\d+|[a-zA-Z_$][a-zA-Z\d_$]*)$/
+  const inputPrint = /^(print)\s+(?<keyName>[a-zA-Z_$][a-zA-Z\d_$]*)$/
+  const inputPrintvars = /^printvars$/
 
   error.checkingForEmptyString()
   error.checkingForVariable(checkCommands)
 
-  if (setFields.getInput().value.match(checkLet)) {
-    commands.getVarAndLet()
+  // == If VAR:
+  if (setFields.getInput().value.match(inputVar)) {
+    commands.startVar(setFields.getInput().value.match(inputVar))
   }
-  if (setFields.getInput().value.match(checkPrint)) {
-    commands.getPrintvars()
+  // == If LET:
+  if (setFields.getInput().value.match(inputLet)) {
+    commands.startLet(setFields.getInput().value.match(inputLet))
   }
-
-  if (setFields.getInput().value.match(checkFn)) {
-    commands.getFn(setFields.getInput().value.match(checkFn))
+  // == If PRINT:
+  if (setFields.getInput().value.match(inputPrint)) {
+    commands.getPrint(setFields.getInput().value.match(inputPrint))
+  }
+  // == If PRINTVARS:
+  if (setFields.getInput().value.match(inputPrintvars)) {
+    commands.getPrintvars(setFields.getInput().value.match(inputPrintvars))
+  }
+  // == If Fn:
+  if (setFields.getInput().value.match(inputFn)) {
+    commands.getFn(setFields.getInput().value.match(inputFn))
   }
   // if (setFields.getInput().value.match(checkPrint)) {
   //   let namePrint = setFields.getInput().value.match(checkPrint)
