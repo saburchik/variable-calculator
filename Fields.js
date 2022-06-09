@@ -1,4 +1,10 @@
 class Fields {
+  constructor() {}
+
+  regInput(regValue) {
+    return this.getInput().value.match(regValue)
+  }
+
   getForm() {
     const form = document.querySelector('form')
     return form
@@ -12,20 +18,22 @@ class Fields {
     const button = document.querySelector('button')
     return button
   }
-  getTextarea1() {
+  getTextareaInput() {
     const textarea1 = document.querySelector('#textarea1')
     return textarea1
   }
-  getTextarea2() {
+  getTextareaOutput() {
     const textarea2 = document.querySelector('#textarea2')
     return textarea2
   }
 
   throwError(num) {
     const arrayErrors = [
-      'Error! Perhaps you have an empty field.',
+      'Error! You have an empty field.',
       'Syntax Error! Available commands: var, let, fn, print, printvars, printfns.',
       'The variable has already been assigned',
+      'Variable(s) are not declared',
+      '* Значение функции/переменной не определено, т.к. не определены значения ее аргументов',
     ]
     return (document.querySelector('h2').innerHTML = arrayErrors[num])
   }

@@ -32,7 +32,7 @@ button {
   transition: 0.3s;
 }
 button:hover,
-button:focus {
+button:focus-visible {
   background-color: aquamarine;
 }
 
@@ -52,8 +52,9 @@ h1 {
 }
 
 h2 {
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: tomato;
+  min-width: 300px;
 }
 
 h3 {
