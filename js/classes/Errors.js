@@ -1,6 +1,11 @@
+import Support from '../supportMethods.js'
 import Fields from './Fields.js'
 
-class Errors extends Fields {
+class Errors {
+  constructor() {
+    this.support = new Support()
+    this.fields = new Fields()
+  }
   throwError(num) {
     const arrayErrors = [
       'Syntax Error! Available commands: var, let, fn, print, printvars, printfns.',
@@ -12,10 +17,10 @@ class Errors extends Fields {
   }
 
   notDeclared(input) {
-    super.addInInput(input)
-    super.getInput().value = ''
-    super.getTextareaOutput().innerHTML += NaN + '\n'
-    throw Error(this.throwError(3))
+    this.throwError(3)
+    this.support.addInTextareaInput(input)
+    this.fields.getInput().value = ''
+    this.fields.getTextareaOutput().innerHTML += NaN + '\n'
   }
 }
 

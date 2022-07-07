@@ -1,127 +1,42 @@
 import Fields from './Fields.js'
-import Errors from './Errors.js'
-const error = new Errors()
+import Printfns from './Commands/Printfns.js'
+import Var from './Commands/Var.js'
+import Let from './Commands/Let.js'
+import Printvars from './Commands/Printvars.js'
+import Fn from './Commands/Fn.js'
+import Print from './Commands/Print.js'
 
 class Core extends Fields {
   constructor() {
     super()
-    this.marks = {
-      '+': (a, b) => a + b,
-      '-': (a, b) => a - b,
-      '*': (a, b) => a * b,
-      '/': (a, b) => a / b,
-    }
-    this.state = {}
-  }
-
-  calculation(op, a, b) {
-    if (op in this.marks) return this.marks[op](a, b)
-    else throw Error(`unsupported operator: ${op}`)
+    this.storeVars = { x: 3, y: 4 }
+    this.storeFns = { XPlusY: 'x+x', minus: 'x*z', multi: 'z*z' }
   }
 
   var(input) {
-    let variableName = input.groups.varName
-
-    if (Object.keys(this.state).length === 0) {
-      this.state[variableName] = NaN
-    } else {
-      for (let key in this.state) {
-        if (key === variableName) {
-          throw Error(error.throwError(2))
-        } else {
-          this.state[variableName] = NaN
-        }
-      }
-    }
-    super.addInInput(input)
-    super.getInput().value = ''
-    console.log(this.state)
+    const varCommand = new Var()
+    return varCommand.validation(this.storeVars, input)
   }
   let(input) {
-    let variableName = input.groups.letName
-    let variableValue = super.fixNumber(Number(input.groups.letValue))
-
-    if (Object.keys(this.state).length === 0) {
-      this.state[variableName] = variableValue
-    } else {
-      this.state[variableName] = variableValue
-      for (let key in this.state) {
-        if (key === variableValue) {
-          this.state[variableName] = this.state[variableValue]
-        }
-      }
-    }
-    super.addInInput(input)
-    super.getInput().value = ''
-    console.log(this.state)
-  }
-  print(input) {
-    let variableName = input.groups.keyName
-
-    if (Object.keys(this.state).length === 0) {
-      error.notDeclared(input)
-    }
-    for (let key in this.state) {
-      if (variableName in this.state === false) {
-        error.notDeclared(input)
-      }
-      if (key === variableName) {
-        if (typeof this.state[key] === 'string') {
-          this.ifPrintFn(this.state[key], input)
-        } else {
-          super.getTextareaOutput().innerHTML += this.state[key] + '\n'
-        }
-      }
-    }
-    super.addInInput(input)
-    super.getInput().value = ''
+    const letCommand = new Let()
+    return letCommand.validation(this.storeVars, input)
   }
   printvars(input) {
-    const ordered = Object.keys(this.state)
-      .sort()
-      .reduce((obj, key) => {
-        obj[key] = this.state[key]
-        return obj
-      }, {})
-
-    super.getTextareaOutput().innerHTML = ''
-    for (let key in ordered) {
-      if (typeof this.state[key] !== 'string') {
-        super.getTextareaOutput().innerHTML += key + ': ' + ordered[key] + '\n'
-      }
-    }
-    super.addInInput(input)
-    super.getInput().value = ''
-    console.log(ordered)
+    const printvarsCommand = new Printvars()
+    return printvarsCommand.validation(this.storeVars, input)
   }
   fn(input) {
-    let funcName = input.groups.fnName
-    let value1 = input.groups.valueOne
-    let value2 = input.groups.valueTwo
-    let sign = input.groups.arithSign
+    const fnCommand = new Fn()
+    return fnCommand.validation(this.storeFns, input)
+  }
+  printfns(input) {
+    const printfnsCommand = new Printfns()
+    return printfnsCommand.validation(this.storeVars, this.storeFns, input)
+  }
 
-    if (Object.keys(this.state).length === 0) {
-      if (sign === undefined && value2 === undefined) {
-        this.state[funcName] = `${value1}`
-      } else {
-        this.state[funcName] = `${value1}${sign}${value2}`
-      }
-    } else {
-      for (let key in this.state) {
-        if (key === funcName) {
-          throw Error(error.throwError(2))
-        } else {
-          if (sign === undefined && value2 === undefined) {
-            this.state[funcName] = `${value1}`
-          } else {
-            this.state[funcName] = `${value1}${sign}${value2}`
-          }
-        }
-      }
-    }
-    super.addInInput(input)
-    super.getInput().value = ''
-    console.log(this.state)
+  print(input) {
+    const printCommand = new Print()
+    return printCommand.validation(this.storeVars, this.storeFns, input)
   }
   ifPrintFn(expression, input) {
     let arithmeticOp = expression.match(

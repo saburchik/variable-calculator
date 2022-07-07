@@ -8,11 +8,17 @@ import {
   regPrintvars,
   regVar,
   regCommands,
+  regPrintfns,
 } from './regExp.js'
 
 const fields = new Fields()
 const core = new Core()
 const error = new Errors()
+
+fields.getInput().addEventListener('change', () => {
+  let spaceRemove = fields.getInput().value.replace(/^ +| +$|( ) +/g, '$1')
+  return (fields.getInput().value = spaceRemove)
+})
 
 fields.getButton().onclick = () => {
   if (fields.regInput(regCommands) === null) {
@@ -37,6 +43,10 @@ fields.getButton().onclick = () => {
     // == If FN:
     if (fields.regInput(regFn)) {
       core.fn(fields.regInput(regFn))
+    }
+    // == If PRINTFNS:
+    if (fields.regInput(regPrintfns)) {
+      core.printfns(fields.regInput(regPrintfns))
     }
   }
 }

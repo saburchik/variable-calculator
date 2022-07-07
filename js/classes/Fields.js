@@ -5,7 +5,6 @@ class Fields {
     }
     return this.getInput().value.match(regValue)
   }
-
   getForm() {
     return document.querySelector('form')
   }
@@ -21,16 +20,6 @@ class Fields {
   }
   getTextareaOutput() {
     return document.querySelector('#textareaOutput')
-  }
-
-  addInInput(field) {
-    this.getTextareaInput().innerHTML += field.input + '\n'
-    document.querySelector('h2').innerHTML = ''
-  }
-
-  fixNumber(num, dec = 2) {
-    const calcDec = Math.pow(10, dec)
-    return Math.trunc(num * calcDec) / calcDec
   }
 }
 
