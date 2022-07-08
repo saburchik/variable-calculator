@@ -1,26 +1,21 @@
-class Fields {
-  regInput(regValue) {
-    if (regValue === null) {
-      throw Error('oh noo')
-    }
-    return this.getInput().value.match(regValue)
+export default class Fields {
+  valid(regExp) {
+    return this.getInput().value.match(regExp)
   }
   getForm() {
-    return document.querySelector('form')
+    return document.getElementById('form')
   }
   getInput() {
-    return document.querySelector('input')
+    return document.getElementById('input')
   }
   getButton() {
     this.getForm().onclick = (e) => e.preventDefault()
-    return document.querySelector('button')
+    return document.getElementById('button')
   }
   getTextareaInput() {
-    return document.querySelector('#textareaInput')
+    return document.getElementById('textareaInput')
   }
   getTextareaOutput() {
-    return document.querySelector('#textareaOutput')
+    return document.getElementById('textareaOutput')
   }
 }
-
-export default Fields

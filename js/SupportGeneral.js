@@ -1,6 +1,6 @@
 import Fields from './classes/Fields.js'
 
-export default class Support {
+export default class SupportGeneral {
   constructor() {
     this.marks = {
       '+': (a, b) => a + b,
@@ -26,5 +26,13 @@ export default class Support {
   addInTextareaInput(field) {
     this.fields.getTextareaInput().innerHTML += field.input + '\n'
     document.querySelector('h2').innerHTML = ''
+    this.fields.getInput().value = ''
+  }
+  addInTextareaOutput(name, value) {
+    if (name === null && value === null)
+      return (this.fields.getTextareaOutput().innerHTML = '')
+
+    return (this.fields.getTextareaOutput().innerHTML +=
+      name + ': ' + value.toFixed(2) + '\n')
   }
 }

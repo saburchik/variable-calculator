@@ -1,45 +1,41 @@
-import { arithmeticCalculations } from '../../regExp.js'
-import Support from '../../supportMethods.js'
+import { regArithmeticCalculations } from '../../regExp.js'
+import SupportGeneral from '../../SupportGeneral.js'
+import SupportPrint from '../../supportPrint.js'
 import Fields from '../Fields.js'
 
 export default class Printfns {
   constructor() {
-    this.support = new Support()
+    this.support = new SupportGeneral()
+    this.supportPrint = new SupportPrint()
     this.fields = new Fields()
   }
 
   validation(storeVars, storeFns, input) {
     // == Sorting through the keys in storeFns:
     for (let key in storeFns) {
-      let arithmeticOp = storeFns[key].match(arithmeticCalculations)
+      let arithmeticOp = storeFns[key].match(regArithmeticCalculations)
       let valueL = arithmeticOp.groups.valueLeft
       let valueR = arithmeticOp.groups.valueRight
       let sign = arithmeticOp.groups.arithSign
       // ---
       let functionName = key
-
-      if (arithmeticOp) {
-        for (let key in storeVars) {
-          if (key === valueL) {
-            let saveValueL = storeVars[key]
-            // if (isNaN(saveValueL)) {
-            //   error.notDeclared(input)
-            // }
-            if (valueR === undefined) {
-              this.support.isIntegerNumber(saveValueL, functionName)
-            }
-            for (let key in storeVars) {
-              if (key === valueR) {
-                let saveValueR = storeVars[key]
-                let res = this.support.calculation(sign, saveValueL, saveValueR)
-                if (functionName) {
-                  this.support.isIntegerNumber(res, functionName)
-                }
-              }
-            }
-          }
-        }
+      const obj = {
+        storeVars,
+        storeFns,
+        valueL,
+        valueR,
+        sign,
+        functionName,
+        input,
       }
+
+      if (valueL in storeFns === true || valueR in storeFns === true) {
+        this.supportPrint.calcLeftFunc(obj)
+      }
+      if (valueL in storeFns === true && valueR in storeFns === true) {
+        throw Error('The both variable is function')
+      }
+      this.supportPrint.justCalculation(obj)
     }
 
     // == Adding a command to the Input window and stripping the input field:

@@ -1,39 +1,36 @@
-import Support from '../../supportMethods.js'
-import Fields from '../Fields.js'
+import SupportGeneral from '../../SupportGeneral.js'
+import Errors from '../Errors.js'
 
 export default class Let {
   constructor() {
-    this.support = new Support()
-    this.fields = new Fields()
+    this.support = new SupportGeneral()
+    this.error = new Errors()
   }
 
-  validation(storeVars, input) {
-    let variableName = input.groups.letName
-    let ifValueString = input.groups.letValue
-    let variableValue = this.support.fixNumber(Number(input.groups.letValue))
+  validation(storeVars, storeFns, input) {
+    const letName = input.groups.letName
+    const letValueString = input.groups.letValue
+    const letValue = this.support.fixNumber(input.groups.letValue)
 
-    if (ifValueString) {
+    if (Object.keys(storeVars).length >= 0) storeVars[letName] = letValue
+    if (letName in storeFns === true) return this.error.throwError(1)
+    if (letName in storeVars === true) {
       for (let key in storeVars) {
-        if (key === ifValueString) {
+        if (key === letValue) {
+          storeVars[letName] = storeVars[letValue]
+        }
+      }
+    }
+    if (letValueString) {
+      for (let key in storeVars) {
+        if (key === letValueString) {
           this.support.addInTextareaInput(input)
-          this.fields.getInput().value = ''
-          return (storeVars[variableName] = storeVars[key])
+          return (storeVars[letName] = storeVars[key])
         }
       }
     }
 
-    if (Object.keys(storeVars).length === 0) {
-      storeVars[variableName] = variableValue
-    } else {
-      storeVars[variableName] = variableValue
-      for (let key in storeVars) {
-        if (key === variableValue) {
-          storeVars[variableName] = storeVars[variableValue]
-        }
-      }
-    }
     this.support.addInTextareaInput(input)
-    this.fields.getInput().value = ''
     console.log(storeVars)
   }
 }

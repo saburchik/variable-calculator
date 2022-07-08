@@ -1,39 +1,28 @@
-import Support from '../../supportMethods.js'
-import Fields from '../Fields.js'
+import SupportGeneral from '../../SupportGeneral.js'
+import Errors from '../Errors.js'
 
 export default class Fn {
   constructor() {
-    this.support = new Support()
-    this.fields = new Fields()
+    this.support = new SupportGeneral()
+    this.error = new Errors()
   }
 
-  validation(storeFns, input) {
-    let functionName = input.groups.fnName
-    let valueL = input.groups.valueLeft
-    let valueR = input.groups.valueRight
-    let sign = input.groups.arithSign
+  validation(storeFns, storeVars, input) {
+    const fnName = input.groups.fnName
+    const valueL = input.groups.valueLeft
+    const valueR = input.groups.valueRight
+    const sign = input.groups.arithSign
 
-    if (Object.keys(storeFns).length === 0) {
-      if (sign === undefined && valueR === undefined) {
-        storeFns[functionName] = `${valueL}`
-      } else {
-        storeFns[functionName] = `${valueL}${sign}${valueR}`
-      }
+    if (fnName in storeVars === true || fnName in storeFns === true)
+      return this.error.throwError(1)
+
+    if (sign === undefined && valueR === undefined) {
+      storeFns[fnName] = `${valueL}`
     } else {
-      for (let key in storeFns) {
-        if (key === functionName) {
-          throw Error(error.throwError(2))
-        } else {
-          if (sign === undefined && valueR === undefined) {
-            storeFns[functionName] = `${valueL}`
-          } else {
-            storeFns[functionName] = `${valueL}${sign}${valueR}`
-          }
-        }
-      }
+      storeFns[fnName] = `${valueL}${sign}${valueR}`
     }
+
     this.support.addInTextareaInput(input)
-    this.fields.getInput().value = ''
     console.log(storeFns)
   }
 }

@@ -9,44 +9,24 @@ import {
   regVar,
   regCommands,
   regPrintfns,
+  regRemovingSpaces,
 } from './regExp.js'
 
 const fields = new Fields()
 const core = new Core()
 const error = new Errors()
 
-fields.getInput().addEventListener('change', () => {
-  let spaceRemove = fields.getInput().value.replace(/^ +| +$|( ) +/g, '$1')
-  return (fields.getInput().value = spaceRemove)
-})
+fields.getInput().onchange = () => {
+  let removeSpaces = fields.getInput().value.replace(regRemovingSpaces, '$1')
+  return (fields.getInput().value = removeSpaces)
+}
 
 fields.getButton().onclick = () => {
-  if (fields.regInput(regCommands) === null) {
-    throw Error(error.throwError(0))
-  } else {
-    // == If VAR:
-    if (fields.regInput(regVar)) {
-      core.var(fields.regInput(regVar))
-    }
-    // == If LET:
-    if (fields.regInput(regLet)) {
-      core.let(fields.regInput(regLet))
-    }
-    // == If PRINT:
-    if (fields.regInput(regPrint)) {
-      core.print(fields.regInput(regPrint))
-    }
-    // == If PRINTVARS:
-    if (fields.regInput(regPrintvars)) {
-      core.printvars(fields.regInput(regPrintvars))
-    }
-    // == If FN:
-    if (fields.regInput(regFn)) {
-      core.fn(fields.regInput(regFn))
-    }
-    // == If PRINTFNS:
-    if (fields.regInput(regPrintfns)) {
-      core.printfns(fields.regInput(regPrintfns))
-    }
-  }
+  if (!fields.valid(regCommands)) error.throwError(0)
+  if (fields.valid(regVar)) core.var(fields.valid(regVar))
+  if (fields.valid(regLet)) core.let(fields.valid(regLet))
+  if (fields.valid(regPrint)) core.print(fields.valid(regPrint))
+  if (fields.valid(regPrintvars)) core.printvars(fields.valid(regPrintvars))
+  if (fields.valid(regFn)) core.fn(fields.valid(regFn))
+  if (fields.valid(regPrintfns)) core.printfns(fields.valid(regPrintfns))
 }

@@ -1,28 +1,21 @@
-import Support from '../../supportMethods.js'
-import Fields from '../Fields.js'
+import SupportGeneral from '../../SupportGeneral.js'
+import Errors from '../Errors.js'
 
 export default class Var {
   constructor() {
-    this.support = new Support()
-    this.fields = new Fields()
+    this.support = new SupportGeneral()
+    this.error = new Errors()
   }
 
-  validation(storeVars, input) {
-    let variableName = input.groups.varName
+  validation(storeVars, storeFns, input) {
+    const varName = input.groups.name
 
-    if (Object.keys(storeVars).length === 0) {
-      storeVars[variableName] = NaN
-    } else {
-      for (let key in storeVars) {
-        if (key === variableName) {
-          throw Error(error.throwError(2))
-        } else {
-          storeVars[variableName] = NaN
-        }
-      }
-    }
+    if (varName in storeVars === true || varName in storeFns === true)
+      return this.error.throwError(1)
+
+    if (Object.keys(storeVars).length >= 0) storeVars[varName] = NaN
+
     this.support.addInTextareaInput(input)
-    this.fields.getInput().value = ''
     console.log(storeVars)
   }
 }
