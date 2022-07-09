@@ -1,24 +1,21 @@
 import { regArithmeticCalculations } from '../../regExp.js'
 import SupportGeneral from '../../SupportGeneral.js'
 import SupportPrint from '../../supportPrint.js'
-import Fields from '../Fields.js'
 
 export default class Printfns {
   constructor() {
     this.support = new SupportGeneral()
     this.supportPrint = new SupportPrint()
-    this.fields = new Fields()
   }
 
   validation(storeVars, storeFns, input) {
-    // == Sorting through the keys in storeFns:
+    this.support.addInTextareaOutput(null, null)
     for (let key in storeFns) {
-      let arithmeticOp = storeFns[key].match(regArithmeticCalculations)
-      let valueL = arithmeticOp.groups.valueLeft
-      let valueR = arithmeticOp.groups.valueRight
-      let sign = arithmeticOp.groups.arithSign
-      // ---
-      let functionName = key
+      const arithmeticOp = storeFns[key].match(regArithmeticCalculations)
+      const valueL = arithmeticOp.groups.valueLeft
+      const valueR = arithmeticOp.groups.valueRight
+      const sign = arithmeticOp.groups.arithSign
+      const functionName = key
       const obj = {
         storeVars,
         storeFns,
@@ -29,18 +26,19 @@ export default class Printfns {
         input,
       }
 
-      if (valueL in storeFns === true || valueR in storeFns === true) {
-        this.supportPrint.calcLeftFunc(obj)
+      if (valueL in storeVars || valueR in storeVars) {
+        this.supportPrint.validNameVar(obj)
       }
+      if (valueL in storeFns || valueR in storeFns) {
+        this.supportPrint.validNameFn(obj)
+      }
+
       if (valueL in storeFns === true && valueR in storeFns === true) {
         throw Error('The both variable is function')
       }
-      this.supportPrint.justCalculation(obj)
     }
 
-    // == Adding a command to the Input window and stripping the input field:
     this.support.addInTextareaInput(input)
-    this.fields.getInput().value = ''
     console.log(storeFns)
   }
 }

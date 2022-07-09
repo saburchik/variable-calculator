@@ -10,7 +10,7 @@ class Errors {
     const arrayErrors = [
       'Syntax Error! The input field is empty or there is no such command!',
       'The variable has already been assigned',
-      'Variable(s) are not declared',
+      'The variable is not declared',
       'Syntax error!',
     ]
     return (document.querySelector('h2').innerHTML = arrayErrors[num])

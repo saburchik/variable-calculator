@@ -1,9 +1,11 @@
 import SupportGeneral from '../../SupportGeneral.js'
+import SupportPrint from '../../supportPrint.js'
 import Errors from '../Errors.js'
 
 export default class Let {
   constructor() {
     this.support = new SupportGeneral()
+    this.supportPrint = new SupportPrint()
     this.error = new Errors()
   }
 
@@ -13,8 +15,17 @@ export default class Let {
     const letValue = this.support.fixNumber(input.groups.letValue)
 
     if (Object.keys(storeVars).length >= 0) storeVars[letName] = letValue
-    if (letName in storeFns === true) return this.error.throwError(1)
-    if (letName in storeVars === true) {
+    if (letName in storeFns) return this.error.throwError(1)
+    if (letValueString in storeFns) {
+      return this.supportPrint.calc(
+        storeVars,
+        storeFns,
+        letName,
+        letValueString,
+        input
+      )
+    }
+    if (letName in storeVars) {
       for (let key in storeVars) {
         if (key === letValue) {
           storeVars[letName] = storeVars[letValue]

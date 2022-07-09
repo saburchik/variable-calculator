@@ -1,4 +1,3 @@
-import Fields from './classes/Fields.js'
 import { regArithmeticCalculations } from './regExp.js'
 import SupportGeneral from './SupportGeneral.js'
 
@@ -10,74 +9,86 @@ export default class SupportPrint {
       '*': (a, b) => a * b,
       '/': (a, b) => a / b,
     }
-    this.fields = new Fields()
     this.support = new SupportGeneral()
   }
   // вычисление, если арифметическая операция в функции производится над переменными:
-  justCalculation(obj) {
-    const { storeVars, valueL, valueR, sign, functionName, input } = obj
+  validNameVar(obj) {
+    const { storeVars, valueL, valueR, sign } = obj
     for (let key in storeVars) {
       if (key === valueL) {
         let saveValueL = storeVars[key]
-        // if (isNaN(saveValueL)) {
-        //   error.notDeclared(input)
-        // }
-        if (valueR === undefined) {
-          this.support.isIntegerNumber(saveValueL, functionName)
-        }
+        if (valueR === undefined)
+          return this.support.addInTextareaOutput(null, saveValueL)
+
         for (let key in storeVars) {
           if (key === valueR) {
             let saveValueR = storeVars[key]
             let res = this.support.calculation(sign, saveValueL, saveValueR)
-            if (functionName) {
-              return this.support.isIntegerNumber(res, functionName)
-            }
+            return this.support.addInTextareaOutput(null, res)
           }
         }
       }
     }
   }
   // вычисление, если в функции левая или правая переменная это функция
-  calcLeftFunc(obj) {
-    const { storeVars, storeFns, valueL, valueR, sign, functionName, input } =
-      obj
+  validNameFn(obj) {
+    const { storeVars, storeFns, valueL, valueR, sign } = obj
     for (let key in storeFns) {
       if (key === valueL || key === valueR) {
-        let arithmeticOpV = storeFns[key].match(regArithmeticCalculations)
-        let valueLV = arithmeticOpV.groups.valueLeft
-        let valueRV = arithmeticOpV.groups.valueRight
-        let signV = arithmeticOpV.groups.arithSign
-        let functionNameV = key
+        const arithmeticOpValue = storeFns[key].match(regArithmeticCalculations)
+        const valueLValue = arithmeticOpValue.groups.valueLeft
+        const valueRValue = arithmeticOpValue.groups.valueRight
+        const signValue = arithmeticOpValue.groups.arithSign
 
         for (let key in storeVars) {
-          if (key === valueLV) {
+          if (key === valueLValue) {
             let saveValueLV = storeVars[key]
-            // if (isNaN(saveValueL)) {
-            //   error.notDeclared(input)
-            // }
-            if (valueRV === undefined) {
-              this.support.isIntegerNumber(saveValueLV, functionNameV)
-            }
+
             for (let key in storeVars) {
-              if (key === valueRV) {
+              if (key === valueRValue) {
                 let saveValueRV = storeVars[key]
                 let res = this.support.calculation(
-                  signV,
+                  signValue,
                   saveValueLV,
                   saveValueRV
                 )
                 for (let key in storeVars) {
                   if (key === valueR || key === valueL) {
-                    let resExp = this.support.calculation(
+                    let finalResult = this.support.calculation(
                       sign,
                       res,
                       storeVars[key]
                     )
-                    if (functionName) {
-                      return this.support.isIntegerNumber(resExp, functionName)
-                    }
+                    return this.support.addInTextareaOutput(null, finalResult)
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  calc(storeVars, storeFns, letName, letValueString, input) {
+    for (let key in storeFns) {
+      if (key === letValueString) {
+        const arithmeticOp = storeFns[key].match(regArithmeticCalculations)
+        const valueL = arithmeticOp.groups.valueLeft
+        const valueR = arithmeticOp.groups.valueRight
+        const sign = arithmeticOp.groups.arithSign
+
+        for (let key in storeVars) {
+          if (key === valueL) {
+            let saveValueL = storeVars[key]
+            if (valueR === undefined)
+              return this.support.addInTextareaOutput(null, saveValueL)
+
+            for (let key in storeVars) {
+              if (key === valueR) {
+                let saveValueR = storeVars[key]
+                let res = this.support.calculation(sign, saveValueL, saveValueR)
+                this.support.addInTextareaInput(input)
+                return (storeVars[letName] = res)
               }
             }
           }

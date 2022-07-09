@@ -32,6 +32,10 @@ export default class SupportGeneral {
     if (name === null && value === null)
       return (this.fields.getTextareaOutput().innerHTML = '')
 
+    if (name === null)
+      return (this.fields.getTextareaOutput().innerHTML +=
+        value.toFixed(2) + '\n')
+
     return (this.fields.getTextareaOutput().innerHTML +=
       name + ': ' + value.toFixed(2) + '\n')
   }

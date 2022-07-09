@@ -2,73 +2,64 @@ import { regArithmeticCalculations } from '../../regExp.js'
 import SupportGeneral from '../../SupportGeneral.js'
 import SupportPrint from '../../supportPrint.js'
 import Errors from '../Errors.js'
-import Fields from '../Fields.js'
 
 export default class Print {
   constructor() {
     this.support = new SupportGeneral()
     this.supportPrint = new SupportPrint()
-    this.fields = new Fields()
     this.error = new Errors()
   }
 
   validation(storeVars, storeFns, input) {
     console.log(input)
-    let variableName = input.groups.keyName
+    let printName = input.groups.keyName
 
-    if (Object.keys(storeVars).length === 0) {
-      this.error.notDeclared(input)
-    }
-    if (variableName in storeVars === false) {
-      if (variableName in storeFns === false) {
-        return this.error.notDeclared(input)
-      } else {
-        this.ifPrintFn(storeVars, storeFns, input)
+    if (printName in storeVars === false && printName in storeFns === false)
+      return this.error.throwError(2)
+
+    if (printName in storeVars) {
+      for (let key in storeVars) {
+        if (key === printName) {
+          this.support.addInTextareaInput(input)
+          return this.support.addInTextareaOutput(null, storeVars[key])
+        }
       }
     }
-    for (let key in storeVars) {
-      if (key === variableName && isNaN(storeVars[key])) {
-        return this.error.notDeclared(input)
-      }
-      if (key === variableName) {
-        this.support.addInTextareaInput(input)
-        this.fields.getInput().value = ''
-        return (this.fields.getTextareaOutput().innerHTML +=
-          variableName + ': ' + storeVars[key].toFixed(2) + '\n')
-      }
-    }
+
+    if (printName in storeFns) this.validationFn(storeVars, storeFns, input)
   }
-  ifPrintFn(storeVars, storeFns, input) {
-    let variableName = input.groups.keyName
+
+  validationFn(storeVars, storeFns, input) {
+    let fnName = input.groups.keyName
 
     for (let key in storeFns) {
-      if (key === variableName) {
-        let arithmeticOp = storeFns[key].match(regArithmeticCalculations)
-        let valueL = arithmeticOp.groups.valueLeft
-        let valueR = arithmeticOp.groups.valueRight
-        let sign = arithmeticOp.groups.arithSign
-        // ---
-        let functionName = key
+      if (key === fnName) {
+        const arithmeticOp = storeFns[key].match(regArithmeticCalculations)
+        const valueL = arithmeticOp.groups.valueLeft
+        const valueR = arithmeticOp.groups.valueRight
+        const sign = arithmeticOp.groups.arithSign
+
         const obj = {
           storeVars,
           storeFns,
           valueL,
           valueR,
           sign,
-          functionName,
           input,
         }
 
-        if (valueL in storeFns === true || valueR in storeFns === true) {
-          this.supportPrint.calcLeftFunc(obj)
+        if (valueL in storeVars || valueR in storeVars) {
+          this.supportPrint.validNameVar(obj)
         }
-        if (valueL in storeFns === true && valueR in storeFns === true) {
+        if (valueL in storeFns || valueR in storeFns) {
+          this.supportPrint.validNameFn(obj)
+        }
+
+        if (valueL in storeFns && valueR in storeFns) {
           throw Error('The both variable is function')
         }
-        this.supportPrint.justCalculation(obj)
       }
     }
     this.support.addInTextareaInput(input)
-    this.fields.getInput().value = ''
   }
 }
