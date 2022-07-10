@@ -7,8 +7,8 @@ import Print from './Commands/Print.js'
 
 export default class Core {
   constructor() {
-    this.storeVars = {}
-    this.storeFns = {}
+    this.storeVars = { x: 5, v: 'sum' }
+    this.storeFns = { sum: 'x+x' }
 
     // this.storeVars = { x: 2, y: 4, z: 3 }
     // this.storeFns = {
@@ -34,7 +34,7 @@ export default class Core {
   }
   printvars(input) {
     const printvarsCommand = new Printvars()
-    return printvarsCommand.validation(this.storeVars, input)
+    return printvarsCommand.validation(this.storeVars, this.storeFns, input)
   }
   fn(input) {
     const fnCommand = new Fn()

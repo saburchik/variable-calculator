@@ -19,6 +19,9 @@ export default class Print {
 
     if (printName in storeVars) {
       for (let key in storeVars) {
+        if (key === printName && typeof storeVars[key] === 'string') {
+          return this.validationFn(storeVars, storeFns, input, storeVars[key])
+        }
         if (key === printName) {
           this.support.addInTextareaInput(input)
           return this.support.addInTextareaOutput(null, storeVars[key])
@@ -29,8 +32,8 @@ export default class Print {
     if (printName in storeFns) this.validationFn(storeVars, storeFns, input)
   }
 
-  validationFn(storeVars, storeFns, input) {
-    let fnName = input.groups.keyName
+  validationFn(storeVars, storeFns, input, value) {
+    let fnName = value ? value : input.groups.keyName
 
     for (let key in storeFns) {
       if (key === fnName) {

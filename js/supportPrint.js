@@ -69,31 +69,31 @@ export default class SupportPrint {
       }
     }
   }
-  calc(storeVars, storeFns, letName, letValueString, input) {
-    for (let key in storeFns) {
-      if (key === letValueString) {
-        const arithmeticOp = storeFns[key].match(regArithmeticCalculations)
-        const valueL = arithmeticOp.groups.valueLeft
-        const valueR = arithmeticOp.groups.valueRight
-        const sign = arithmeticOp.groups.arithSign
+  // calc(storeVars, storeFns, letName, letValueString, input) {
+  //   for (let key in storeFns) {
+  //     if (key === letValueString) {
+  //       const arithmeticOp = storeFns[key].match(regArithmeticCalculations)
+  //       const valueL = arithmeticOp.groups.valueLeft
+  //       const valueR = arithmeticOp.groups.valueRight
+  //       const sign = arithmeticOp.groups.arithSign
 
-        for (let key in storeVars) {
-          if (key === valueL) {
-            let saveValueL = storeVars[key]
-            if (valueR === undefined)
-              return this.support.addInTextareaOutput(null, saveValueL)
+  //       for (let key in storeVars) {
+  //         if (key === valueL) {
+  //           let saveValueL = storeVars[key]
+  //           if (valueR === undefined)
+  //             return this.support.addInTextareaOutput(null, saveValueL)
 
-            for (let key in storeVars) {
-              if (key === valueR) {
-                let saveValueR = storeVars[key]
-                let res = this.support.calculation(sign, saveValueL, saveValueR)
-                this.support.addInTextareaInput(input)
-                return (storeVars[letName] = res)
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  //           for (let key in storeVars) {
+  //             if (key === valueR) {
+  //               let saveValueR = storeVars[key]
+  //               let res = this.support.calculation(sign, saveValueL, saveValueR)
+  //               this.support.addInTextareaInput(input)
+  //               return (storeVars[letName] = res)
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }

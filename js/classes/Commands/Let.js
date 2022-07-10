@@ -16,15 +16,6 @@ export default class Let {
 
     if (Object.keys(storeVars).length >= 0) storeVars[letName] = letValue
     if (letName in storeFns) return this.error.throwError(1)
-    if (letValueString in storeFns) {
-      return this.supportPrint.calc(
-        storeVars,
-        storeFns,
-        letName,
-        letValueString,
-        input
-      )
-    }
     if (letName in storeVars) {
       for (let key in storeVars) {
         if (key === letValue) {
@@ -32,6 +23,8 @@ export default class Let {
         }
       }
     }
+    if (letValueString in storeFns) storeVars[letName] = letValueString
+    if (!letValueString in storeFns) return this.error.throwError(1)
     if (letValueString) {
       for (let key in storeVars) {
         if (key === letValueString) {
