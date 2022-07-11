@@ -1,11 +1,9 @@
-import SupportGeneral from '../../SupportGeneral.js'
-import SupportPrint from '../../supportPrint.js'
-import Errors from '../Errors.js'
+import SupportGeneral from '../classes/SupportGeneral.js'
+import Errors from '../classes/Errors.js'
 
 export default class Let {
   constructor() {
     this.support = new SupportGeneral()
-    this.supportPrint = new SupportPrint()
     this.error = new Errors()
   }
 
@@ -23,8 +21,6 @@ export default class Let {
         }
       }
     }
-    if (letValueString in storeFns) storeVars[letName] = letValueString
-    if (!letValueString in storeFns) return this.error.throwError(1)
     if (letValueString) {
       for (let key in storeVars) {
         if (key === letValueString) {

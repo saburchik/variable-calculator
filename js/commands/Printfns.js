@@ -1,6 +1,6 @@
-import { regArithmeticCalculations } from '../../regExp.js'
-import SupportGeneral from '../../SupportGeneral.js'
-import SupportPrint from '../../supportPrint.js'
+import SupportGeneral from '../classes/SupportGeneral.js'
+import SupportPrint from '../classes/SupportPrint.js'
+import { regArithmeticCalculations } from '../regExp.js'
 
 export default class Printfns {
   constructor() {
@@ -10,15 +10,17 @@ export default class Printfns {
 
   validation(storeVars, storeFns, input) {
     this.support.addInTextareaOutput(null, null)
-    for (let key in storeFns) {
-      const arithmeticOp = storeFns[key].match(regArithmeticCalculations)
+    const orderedFns = this.support.sortNames(storeFns)
+
+    for (let key in orderedFns) {
+      const arithmeticOp = orderedFns[key].match(regArithmeticCalculations)
       const valueL = arithmeticOp.groups.valueLeft
       const valueR = arithmeticOp.groups.valueRight
       const sign = arithmeticOp.groups.arithSign
       const functionName = key
       const obj = {
         storeVars,
-        storeFns,
+        orderedFns,
         valueL,
         valueR,
         sign,
@@ -26,19 +28,19 @@ export default class Printfns {
         input,
       }
 
-      if (valueL in storeVars || valueR in storeVars) {
+      if (valueL in storeVars && valueR in storeVars) {
         this.supportPrint.validNameVar(obj)
       }
-      if (valueL in storeFns || valueR in storeFns) {
+      if (valueL in orderedFns || valueR in orderedFns) {
         this.supportPrint.validNameFn(obj)
       }
 
-      if (valueL in storeFns === true && valueR in storeFns === true) {
+      if (valueL in orderedFns === true && valueR in orderedFns === true) {
         throw Error('The both variable is function')
       }
     }
 
     this.support.addInTextareaInput(input)
-    console.log(storeFns)
+    console.log(orderedFns)
   }
 }

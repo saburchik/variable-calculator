@@ -1,7 +1,7 @@
-import { regArithmeticCalculations } from '../../regExp.js'
-import SupportGeneral from '../../SupportGeneral.js'
-import SupportPrint from '../../supportPrint.js'
-import Errors from '../Errors.js'
+import SupportGeneral from '../classes/SupportGeneral.js'
+import SupportPrint from '../classes/SupportPrint.js'
+import Errors from '../classes/Errors.js'
+import { regArithmeticCalculations } from '../regExp.js'
 
 export default class Print {
   constructor() {
@@ -11,7 +11,6 @@ export default class Print {
   }
 
   validation(storeVars, storeFns, input) {
-    console.log(input)
     let printName = input.groups.keyName
 
     if (printName in storeVars === false && printName in storeFns === false)
@@ -19,9 +18,6 @@ export default class Print {
 
     if (printName in storeVars) {
       for (let key in storeVars) {
-        if (key === printName && typeof storeVars[key] === 'string') {
-          return this.validationFn(storeVars, storeFns, input, storeVars[key])
-        }
         if (key === printName) {
           this.support.addInTextareaInput(input)
           return this.support.addInTextareaOutput(null, storeVars[key])
@@ -32,8 +28,8 @@ export default class Print {
     if (printName in storeFns) this.validationFn(storeVars, storeFns, input)
   }
 
-  validationFn(storeVars, storeFns, input, value) {
-    let fnName = value ? value : input.groups.keyName
+  validationFn(storeVars, storeFns, input) {
+    let fnName = input.groups.keyName
 
     for (let key in storeFns) {
       if (key === fnName) {

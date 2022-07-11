@@ -1,4 +1,4 @@
-import Fields from './classes/Fields.js'
+import Fields from './Fields.js'
 
 export default class SupportGeneral {
   constructor() {
@@ -13,15 +13,20 @@ export default class SupportGeneral {
 
   calculation(op, a, b) {
     if (op in this.marks) return this.marks[op](a, b)
-    else throw Error(`unsupported operator: ${op}`)
+    return Error(`Unsupported operator: ${op}`)
+  }
+  sortNames(objWithData) {
+    const orderedNames = Object.keys(objWithData)
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = objWithData[key]
+        return obj
+      }, {})
+    return orderedNames
   }
   fixNumber(num, dec = 2) {
     const calcDec = Math.pow(10, dec)
     return Math.trunc(num * calcDec) / calcDec
-  }
-  isIntegerNumber(num, functionName) {
-    return (this.fields.getTextareaOutput().innerHTML +=
-      functionName + ': ' + num.toFixed(2) + '\n')
   }
   addInTextareaInput(field) {
     this.fields.getTextareaInput().innerHTML += field.input + '\n'

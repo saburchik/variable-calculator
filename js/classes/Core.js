@@ -1,23 +1,17 @@
-import Printfns from './Commands/Printfns.js'
-import Var from './Commands/Var.js'
-import Let from './Commands/Let.js'
-import Printvars from './Commands/Printvars.js'
-import Fn from './Commands/Fn.js'
-import Print from './Commands/Print.js'
+import Printfns from '../commands/Printfns.js'
+import Var from '../commands/Var.js'
+import Let from '../commands/Let.js'
+import Printvars from '../commands/Printvars.js'
+import Fn from '../commands/Fn.js'
+import Print from '../commands/Print.js'
 
 export default class Core {
   constructor() {
-    this.storeVars = { x: 5, v: 'sum' }
-    this.storeFns = { sum: 'x+x' }
-
-    // this.storeVars = { x: 2, y: 4, z: 3 }
-    // this.storeFns = {
-    //   XPlusY: 'x+y',
-    //   minus: 'x*z',
-    //   multi: 'z*z',
-    //   XPlusYDivZ: 'XPlusY/z',
-    //   z: 'x-x',
-    // }
+    this.storeVars = { z: 3.5, x: 10, y: 4 }
+    this.storeFns = {
+      XPlusY: 'x+y',
+      XPlusYDivZ: 'XPlusY/z',
+    }
   }
 
   var(input) {

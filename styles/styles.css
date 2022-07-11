@@ -8,7 +8,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #0a1552;
+  background: linear-gradient(
+    124deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+
   min-height: 100vh;
   color: bisque;
   letter-spacing: 2px;
@@ -22,7 +28,7 @@ button {
   padding: 0.5rem 1rem;
   border-radius: 1rem;
   outline: none;
-  border: 2px solid tomato;
+  border: 3px solid #833ab4;
   transition: 0.3s;
 }
 
@@ -34,19 +40,21 @@ input:focus {
 button {
   text-transform: uppercase;
   cursor: pointer;
-  background-color: teal;
+  color: #fff;
+  background: #833ab4;
   transition: 0.3s;
 }
 button:hover,
 button:focus-visible {
-  background-color: aquamarine;
+  background: #00d4ff;
 }
 
 textarea {
   padding: 1rem;
   border-radius: 1rem;
   outline: none;
-  border: 2px solid tomato;
+  border: 3px solid #833ab4;
+  resize: none;
 }
 
 h1 {

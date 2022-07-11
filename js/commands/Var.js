@@ -1,5 +1,5 @@
-import SupportGeneral from '../../SupportGeneral.js'
-import Errors from '../Errors.js'
+import SupportGeneral from '../classes/SupportGeneral.js'
+import Errors from '../classes/Errors.js'
 
 export default class Var {
   constructor() {

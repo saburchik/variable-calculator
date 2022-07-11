@@ -9,7 +9,7 @@
 | `print`     | `print x`       | Outputs the value of the variable                                            |
 | `printvars` | `printvars`     | Outputs **key**=**value** of all variables                                   |
 | `fn`        | `fn someFn=x+x` | Creates a function. When we `print someFn` it, returns the calculated result |
-| `printfns`  | `printfns`      | **Soon**                                                                     |
+| `printfns`  | `printfns`      | Outputs **key**=**value** of all functions                                   |
 
 ### Task from:
 
