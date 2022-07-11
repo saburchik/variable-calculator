@@ -7,11 +7,8 @@ import Print from '../commands/Print.js'
 
 export default class Core {
   constructor() {
-    this.storeVars = { z: 3.5, x: 10, y: 4 }
-    this.storeFns = {
-      XPlusY: 'x+y',
-      XPlusYDivZ: 'XPlusY/z',
-    }
+    this.storeVars = {}
+    this.storeFns = {}
   }
 
   var(input) {
