@@ -34,7 +34,8 @@ export default class SupportPrint {
   validNameFn(obj) {
     const {
       storeVars,
-      orderedFns,
+      storeFns,
+      orderedFns = storeFns,
       valueL,
       valueR,
       sign,

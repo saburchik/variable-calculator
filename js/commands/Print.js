@@ -37,7 +37,6 @@ export default class Print {
         const valueL = arithmeticOp.groups.valueLeft
         const valueR = arithmeticOp.groups.valueRight
         const sign = arithmeticOp.groups.arithSign
-
         const obj = {
           storeVars,
           storeFns,
@@ -47,12 +46,13 @@ export default class Print {
           input,
         }
 
-        if (valueL in storeVars || valueR in storeVars) {
+        if (
+          (valueL in storeVars && valueR in storeVars) ||
+          valueR === undefined
+        )
           this.supportPrint.validNameVar(obj)
-        }
-        if (valueL in storeFns || valueR in storeFns) {
+        if (valueL in storeFns || valueR in storeFns)
           this.supportPrint.validNameFn(obj)
-        }
 
         if (valueL in storeFns && valueR in storeFns) {
           throw Error('The both variable is function')

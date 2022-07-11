@@ -20,12 +20,13 @@ export default class Printfns {
       const functionName = key
       const obj = {
         storeVars,
-        orderedFns,
+        storeFns,
         valueL,
         valueR,
         sign,
         functionName,
         input,
+        orderedFns,
       }
 
       if (valueL in storeVars && valueR in storeVars) {
